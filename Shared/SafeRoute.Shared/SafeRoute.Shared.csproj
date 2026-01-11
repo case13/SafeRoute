@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Ingestion\" />
-    <Folder Include="Dtos\Doors\" />
-    <Folder Include="Dtos\Ramps\" />
+    <Folder Include="Dtos\Results\" />
+    <Folder Include="Dtos\Reports\" />
+    <Folder Include="Dtos\Analysis\" />
     <Folder Include="Responses\" />
     <Folder Include="Requests\" />
   </ItemGroup>
