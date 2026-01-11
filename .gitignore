@@ -1,0 +1,68 @@
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+
+# Visual Studio
+.vscode/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.DS_Store
+
+# Build results
+bin/
+obj/
+debug/
+release/
+out/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.ilk
+*.log
+*.meta
+*.vsix
+*.nuspec
+
+# Roslyn cache
+*.ide
+
+# Packages
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Configuração de logs temporários
+logs/
+*.log
+
+# Publish results
+.publish/
+
+# Restrições específicas para ASP.NET e configs temporárias
+appsettings.*.json
+Secrets/
+
+# Diretório gerado por teste (caso tenha)
+TestResults/
+
+# Arquivos de lock
+project.lock.json
+project.fragment.lock.json
+
+# Auto gerados pelo sistema de pacotes
+*.csproj.user
+*.props
+*.targets
+*.lock.json
+
+# Outros arquivos temp

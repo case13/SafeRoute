@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36327.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{65C40205-624E-4F0A-A635-F199B538CF96}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{91FA3E69-0893-4D94-B0C7-AFBB48553F49}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugin", "Plugin", "{324749EE-8E0E-4C48-A28E-DB0F09B5F36C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRoute.Shared", "Shared\SafeRoute.Shared\SafeRoute.Shared.csproj", "{F79A4C00-55A5-4B27-9CFD-961BD06C4F7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F79A4C00-55A5-4B27-9CFD-961BD06C4F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F79A4C00-55A5-4B27-9CFD-961BD06C4F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F79A4C00-55A5-4B27-9CFD-961BD06C4F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F79A4C00-55A5-4B27-9CFD-961BD06C4F7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F79A4C00-55A5-4B27-9CFD-961BD06C4F7A} = {91FA3E69-0893-4D94-B0C7-AFBB48553F49}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {391EA72C-9030-4A41-B514-F7BDCD906C4C}
+	EndGlobalSection
+EndGlobal
