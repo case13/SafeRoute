@@ -1,6 +1,6 @@
 ﻿namespace SafeRoute.Revit.NetFramework.Models
 {
-    public class DoorData
+    public class RampData
     {
         /// <summary>
         /// Revit ElementId (string para desacoplar)
@@ -8,18 +8,18 @@
         public string ElementId { get; set; } = default!;
 
         /// <summary>
-        /// Door width in meters
+        /// Ramp width in meters
         /// </summary>
         public double Width { get; set; }
 
         /// <summary>
-        /// Door height in meters
+        /// Ramp length in meters
         /// </summary>
-        public double Height { get; set; }
+        public double Length { get; set; }
 
         /// <summary>
-        /// Indicates whether the door is marked as accessible
+        /// Ramp slope as decimal (e.g. 0.0833 = 8.33%)
         /// </summary>
-        public bool IsAccessible { get; set; }
+        public double Slope { get; set; }
     }
 }

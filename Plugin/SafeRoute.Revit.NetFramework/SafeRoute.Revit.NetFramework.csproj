@@ -10,6 +10,8 @@
     <RootNamespace>SafeRoute.Revit.NetFramework</RootNamespace>
     <AssemblyName>SafeRoute.Revit.NetFramework</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+	<LangVersion>8.0</LangVersion>
+	<Nullable>enable</Nullable>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -41,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DoorData.cs" />
+    <Compile Include="Models\RampData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
