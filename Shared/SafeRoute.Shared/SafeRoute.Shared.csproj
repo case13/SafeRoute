@@ -10,7 +10,8 @@
     <Folder Include="Dtos\Ingestion\" />
     <Folder Include="Dtos\Doors\" />
     <Folder Include="Dtos\Ramps\" />
-    <Folder Include="Enums\" />
+    <Folder Include="Enums\Elements\" />
+    <Folder Include="Enums\Rules\" />
     <Folder Include="Responses\" />
     <Folder Include="Requests\" />
   </ItemGroup>
