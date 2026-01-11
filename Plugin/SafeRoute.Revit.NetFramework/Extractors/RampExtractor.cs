@@ -1,8 +1,7 @@
-﻿using Autodesk.Revit.DB;
+﻿using System.Collections.Generic;
+using Autodesk.Revit.DB;
 using SafeRoute.Revit.NetFramework.Models;
 using SafeRoute.Revit.NetFramework.Utils;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace SafeRoute.Revit.NetFramework.Extractors
 {
@@ -25,27 +24,22 @@ namespace SafeRoute.Revit.NetFramework.Extractors
 
             foreach (var element in collector)
             {
-                if (element is not Ramp ramp)
+                var ramp = element as FamilyInstance;
+                if (ramp == null)
                     continue;
 
-                var widthParam = ramp.get_Parameter(BuiltInParameter.RAMP_WIDTH);
-                var lengthParam = ramp.get_Parameter(BuiltInParameter.RAMP_LENGTH);
+                var widthParam = ramp.LookupParameter("Width");
+                var lengthParam = ramp.LookupParameter("Length");
 
                 if (widthParam == null || lengthParam == null)
                     continue;
 
-                var widthFeet = widthParam.AsDouble();
-                var lengthFeet = lengthParam.AsDouble();
-
-                // Slope = rise / run (decimal)
-                var slope = ramp.Slope;
-
                 var rampData = new RampData
                 {
                     ElementId = ramp.Id.IntegerValue.ToString(),
-                    Width = UnitConverter.FeetToMeters(widthFeet),
-                    Length = UnitConverter.FeetToMeters(lengthFeet),
-                    Slope = slope
+                    Width = UnitConverter.FeetToMeters(widthParam.AsDouble()),
+                    Length = UnitConverter.FeetToMeters(lengthParam.AsDouble()),
+                    Slope = 0 // Fase 1: slope será tratado depois
                 };
 
                 result.Add(rampData);
