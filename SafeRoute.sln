@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRoute.Application", "Ba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRoute.Api", "Backend\SafeRoute.Api\SafeRoute.Api.csproj", "{ADD0518A-E9BC-4790-8575-9A2E5B5FCAFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeRoute.BlazorServer", "Frontend\SafeRoute.BlazorServer\SafeRoute.BlazorServer.csproj", "{F28C2198-EEEA-42AA-AFB8-611AC105EAFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{ADD0518A-E9BC-4790-8575-9A2E5B5FCAFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADD0518A-E9BC-4790-8575-9A2E5B5FCAFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADD0518A-E9BC-4790-8575-9A2E5B5FCAFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F28C2198-EEEA-42AA-AFB8-611AC105EAFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F28C2198-EEEA-42AA-AFB8-611AC105EAFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F28C2198-EEEA-42AA-AFB8-611AC105EAFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F28C2198-EEEA-42AA-AFB8-611AC105EAFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +63,7 @@ Global
 		{FAD905AB-E908-4EA5-9327-0EBDFCBE8AF5} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{E75CDD03-EF80-454A-8A89-8034B7076C9E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{ADD0518A-E9BC-4790-8575-9A2E5B5FCAFA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{F28C2198-EEEA-42AA-AFB8-611AC105EAFC} = {65C40205-624E-4F0A-A635-F199B538CF96}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {391EA72C-9030-4A41-B514-F7BDCD906C4C}
