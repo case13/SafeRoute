@@ -2,7 +2,7 @@
 
 namespace SafeRoute.Shared.Enums.Normas
 {
-    public enum NormaType
+    public enum NormaTypeEnum
     {
         [Display(Name = "Undefined")]
         Undefined = 0,
