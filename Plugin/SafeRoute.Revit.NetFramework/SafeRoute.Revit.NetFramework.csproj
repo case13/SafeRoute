@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Adapters\DoorAdapter.cs" />
     <Compile Include="Adapters\RampAdapter.cs" />
+    <Compile Include="Commands\ExtractModelCommand.cs" />
     <Compile Include="Extractors\DoorExtractor.cs" />
     <Compile Include="Extractors\RampExtractor.cs" />
     <Compile Include="Models\DoorData.cs" />
