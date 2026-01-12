@@ -53,10 +53,12 @@
   <ItemGroup>
     <Compile Include="Adapters\DoorAdapter.cs" />
     <Compile Include="Adapters\RampAdapter.cs" />
+    <Compile Include="Extractors\DoorExtractor.cs" />
     <Compile Include="Extractors\RampExtractor.cs" />
     <Compile Include="Models\DoorData.cs" />
     <Compile Include="Models\RampData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ModelIngestionService.cs" />
     <Compile Include="Utils\UnitConverter.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,8 +67,6 @@
       <Name>SafeRoute.Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
