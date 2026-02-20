@@ -1,0 +1,85 @@
+﻿@page "/login"
+@attribute [AllowAnonymous]
+
+@using Microsoft.AspNetCore.Authorization
+@using SafeRoute.BlazorServer.Components.Selects
+@using SafeRoute.Shared.Enums.Tipos
+@inject SafeRoute.BlazorServer.ViewModels.Interfaces.ILoginViewModel LoginVM
+@inject NavigationManager Nav
+
+<MudContainer MaxWidth="MaxWidth.Small"
+              Class="d-flex align-center justify-center"
+              Style="height:100vh;">
+
+    <MudPaper Elevation="10"
+              Class="pa-6"
+              Style="width:100%; max-width:420px; border-radius:12px;">
+
+        <MudStack Spacing="4">
+
+            <MudAvatar Size="Size.Large"
+                       Color="Color.Primary"
+                       Class="mx-auto">
+                <MudIcon Icon="@Icons.Material.Filled.Person"
+                         Size="Size.Large"
+                         Color="Color.Surface" />
+            </MudAvatar>
+
+            <MudText Typo="Typo.h5"
+                     Align="Align.Center"
+                     Class="mt-2">
+                Login
+            </MudText>
+
+            <MudDivider />
+
+            <MudTextField Label="Email"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Email"
+                          @bind-Value="LoginVM.Email"
+                          FullWidth />
+
+            <MudTextField Label="Senha"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Lock"
+                          @bind-Value="LoginVM.Password"
+                          FullWidth />
+
+            @if (!string.IsNullOrWhiteSpace(LoginVM.Error))
+            {
+                <MudText Typo="Typo.body2"
+                         Color="Color.Error"
+                         Align="Align.Center">
+                    @LoginVM.Error
+                </MudText>
+            }
+
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       Size="Size.Large"
+                       Disabled="LoginVM.IsBusy"
+                       FullWidth
+                       OnClick="LoginAsync">
+                Access
+            </MudButton>
+
+        </MudStack>
+
+    </MudPaper>
+</MudContainer>
+
+@code {
+
+    private async Task LoginAsync()
+    {
+        Console.WriteLine("LOGIN CLICK");
+        var ok = await LoginVM.LoginAsync();
+        Console.WriteLine("LOGIN OK => " + ok);
+
+        if (ok)
+            Nav.NavigateTo("/", forceLoad: true);
+    }
+}

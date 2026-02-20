@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNetCore.Components
+@inject NavigationManager Navigation
+
+@code {
+    private bool _redirected;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && !_redirected)
+        {
+            _redirected = true;
+            Navigation.NavigateTo("/login", replace: true);
+        }
+    }
+}

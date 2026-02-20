@@ -1,0 +1,129 @@
+﻿@typeparam TModel
+@using MudBlazor
+@using SafeRoute.BlazorServer.Components.Bars
+@inject ISnackbar Snackbar
+
+<MudPaper Elevation="0" Class="pa-4">
+
+    <TitleBarDefault Subtitle="@Subtitle"
+                     SubtitleColor="@SubtitleColor"
+                     SubtitleTextColor="@SubtitleTextColor"
+                     SubtitleFontType="@SubtitleFontType"
+                     Padding="@Padding"
+                     Margin="@Margin" />
+
+    @if (Model is null)
+    {
+        <MudProgressCircular Indeterminate="true" />
+    }
+    else
+    {
+        <MudForm @ref="_form"
+                 Model="Model"
+                 @bind-IsValid="_isValid"
+                 @bind-Errors="_errors">
+            <MudStack Spacing="3">
+
+                @if (ChildContent is not null)
+                {
+                    @ChildContent(Model)
+                }
+
+                <MudStack Row Justify="Justify.FlexEnd" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudButton Variant="Variant.Text" OnClick="OnCancel">
+                        Cancelar
+                    </MudButton>
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Default"
+                               Class="btn-darkred"
+                               Disabled="@_saving"
+                               OnClick="OnSaveClicked">
+                        @if (_saving)
+                        {
+                            <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="me-2" />
+                        }
+                        @SaveButtonText
+                    </MudButton>
+                </MudStack>
+
+            </MudStack>
+        </MudForm>
+    }
+</MudPaper>
+
+<style>
+    button.mud-button-root.btn-darkred {
+        background-color: darkred;
+        color: #fff;
+        transition: background-color .2s ease-in-out, box-shadow .2s;
+    }
+
+        button.mud-button-root.btn-darkred:hover {
+            background-color: red;
+        }
+
+        button.mud-button-root.btn-darkred:active {
+            background-color: darkred;
+        }
+
+        button.mud-button-root.btn-darkred.mud-disabled {
+            background-color: #9ca3af;
+        }
+</style>
+
+@code {
+    private MudForm? _form;
+    private bool _isValid;
+    private string[] _errors = Array.Empty<string>();
+    private bool _saving;
+
+    [Parameter] public string SaveButtonText { get; set; } = "Salvar";
+    [Parameter] public TModel? Model { get; set; }
+    [Parameter] public RenderFragment<TModel> ChildContent { get; set; } = default!;
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public Func<Task<bool>> OnSave { get; set; } = default!;
+
+    [Parameter] public string Subtitle { get; set; } = "Consulta";
+    [Parameter] public string SubtitleColor { get; set; } = "#000080";
+    [Parameter] public string SubtitleTextColor { get; set; } = "white";
+    [Parameter] public string SubtitleFontType { get; set; } = "bold";
+    [Parameter] public string Padding { get; set; } = "10px";
+    [Parameter] public string Margin { get; set; } = "10px 0 10px 0";
+
+    private async Task OnSaveClicked()
+    {
+        if (_form is null)
+            return;
+
+        await _form.Validate();
+
+        if (!_isValid)
+        {
+            Snackbar.Add("Corrija os campos destacados.", Severity.Warning);
+            return;
+        }
+
+        try
+        {
+            _saving = true;
+            var ok = await OnSave.Invoke();
+            _saving = false;
+
+            if (!ok)
+                Snackbar.Add("Não foi possível salvar.", Severity.Error);
+        }
+        catch (Exception ex)
+        {
+            _saving = false;
+            Snackbar.Add($"Erro ao salvar: {ex.Message}", Severity.Error);
+        }
+
+        StateHasChanged();
+    }
+
+    public Task SubmitAsync()
+    {
+        return OnSaveClicked();
+    }
+}

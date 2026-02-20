@@ -1,0 +1,49 @@
+﻿@using MudBlazor
+@using SafeRoute.BlazorServer.Components.Forms
+@using SafeRoute.BlazorServer.ViewModels.Interfaces
+@using SafeRoute.Shared.Dtos.Project
+@inject IProjectViewModel Vm
+
+<FormBaseDialog TModel="CreateProjectDto"
+                Subtitle="Novo Projeto"
+                SaveButtonText="Gravar"
+                Model="Vm.New"
+                OnCancel="Cancel"
+                OnSave="SaveAsync">
+
+    <ChildContent Context="m">
+        <MudTextField T="string"
+                      Label="Nome"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.Name"
+                      For="@(() => m.Name)"
+                      Required="true"
+                      FullWidth="true" />
+
+        <MudTextField T="string"
+                      Label="ExternalId"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.ExternalId"
+                      FullWidth="true" />
+    </ChildContent>
+
+</FormBaseDialog>
+
+@code {
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
+
+    private Task Cancel()
+    {
+        MudDialog.Cancel();
+        return Task.CompletedTask;
+    }
+
+    private async Task<bool> SaveAsync()
+    {
+        var ok = await Vm.CreateAsync();
+        if (ok)
+            MudDialog.Close(DialogResult.Ok(true));
+
+        return ok;
+    }
+}

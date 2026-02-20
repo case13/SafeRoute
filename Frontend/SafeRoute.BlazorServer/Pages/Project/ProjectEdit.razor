@@ -1,0 +1,62 @@
+﻿@using MudBlazor
+@using SafeRoute.BlazorServer.Components.Forms
+@using SafeRoute.BlazorServer.ViewModels.Interfaces
+@using SafeRoute.Shared.Dtos.Project
+@inject IProjectViewModel Vm
+
+<FormBaseDialog TModel="UpdateProjectDto"
+                Subtitle="Editar Projeto"
+                SaveButtonText="Gravar"
+                Model="Vm.Edit"
+                OnCancel="Cancel"
+                OnSave="SaveAsync">
+
+    <ChildContent Context="m">
+        <MudTextField T="string"
+                      Label="Nome"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.Name"
+                      For="@(() => m.Name)"
+                      Required="true"
+                      FullWidth="true" />
+
+        <MudTextField T="string"
+                      Label="ExternalId"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.ExternalId"
+                      FullWidth="true" />
+
+        <MudSwitch T="bool"
+                   Color="Color.Primary"
+                   @bind-Checked="m.IsActive">
+            Ativo
+        </MudSwitch>
+    </ChildContent>
+
+</FormBaseDialog>
+
+@code {
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public int ProjectId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ProjectId > 0)
+            await Vm.LoadByIdAsync(ProjectId);
+    }
+
+    private Task Cancel()
+    {
+        MudDialog.Cancel();
+        return Task.CompletedTask;
+    }
+
+    private async Task<bool> SaveAsync()
+    {
+        var ok = await Vm.SaveEditAsync();
+        if (ok)
+            MudDialog.Close(DialogResult.Ok(true));
+
+        return ok;
+    }
+}
