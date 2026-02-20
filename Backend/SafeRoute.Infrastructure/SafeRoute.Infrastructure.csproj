@@ -22,6 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\SafeRoute.Shared\SafeRoute.Shared.csproj" />
+    <ProjectReference Include="..\SafeRoute.Application\SafeRoute.Application.csproj" />
     <ProjectReference Include="..\SafeRoute.Domain\SafeRoute.Domain.csproj" />
   </ItemGroup>
 

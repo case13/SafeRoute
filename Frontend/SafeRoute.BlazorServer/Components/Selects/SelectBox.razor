@@ -1,0 +1,100 @@
+﻿@typeparam TValue
+@using System.ComponentModel.DataAnnotations
+@using System.Linq.Expressions
+@using MudBlazor
+@namespace SafeRoute.BlazorServer.Components.Selects
+
+<MudSelect T="TValue"
+           Value="Value"
+           ValueChanged="OnInternalChanged"
+           For="ValueExpression"
+           Label="@Label"
+           Variant="@Variant"
+           Dense="@Dense"
+           FullWidth="@FullWidth"
+           Disabled="@Disabled"
+           Required="@Required"
+           Clearable="@Clearable"
+           Class="@Class"
+           Style="@Style">
+
+    @if (ShowPlaceholder)
+    {
+        <MudSelectItem Value="@_defaultValue" Disabled="true">@Placeholder</MudSelectItem>
+    }
+
+    @if (EnumMode)
+    {
+        @foreach (var val in _enumValues)
+        {
+            <MudSelectItem Value="@val">@GetEnumDisplay(val)</MudSelectItem>
+        }
+    }
+    else if (Options is not null)
+    {
+        @foreach (var opt in Options)
+        {
+            <MudSelectItem Value="@opt.Value">@opt.Text</MudSelectItem>
+        }
+    }
+</MudSelect>
+
+@code {
+    [Parameter] public TValue Value { get; set; } = default!;
+    [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
+    [Parameter] public Expression<Func<TValue>>? ValueExpression { get; set; }
+
+    [Parameter] public bool EnumMode { get; set; } = false;
+    [Parameter] public IEnumerable<SelectBoxOption<TValue>>? Options { get; set; }
+
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public string Placeholder { get; set; } = "Selecione...";
+    [Parameter] public bool ShowPlaceholder { get; set; } = true;
+    [Parameter] public bool Required { get; set; } = false;
+    [Parameter] public bool Dense { get; set; } = true;
+    [Parameter] public bool FullWidth { get; set; } = true;
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public bool Clearable { get; set; } = false;
+    [Parameter] public Variant Variant { get; set; } = Variant.Outlined;
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public string? Style { get; set; }
+
+    private readonly TValue _defaultValue = default!;
+    private IReadOnlyList<TValue> _enumValues = Array.Empty<TValue>();
+
+    protected override void OnParametersSet()
+    {
+        if (EnumMode)
+        {
+            var t = typeof(TValue);
+            if (!t.IsEnum)
+                throw new InvalidOperationException($"SelectBox EnumMode requer que TValue seja enum. Tipo atual: {t.Name}");
+
+            _enumValues = Enum.GetValues(t).Cast<TValue>().ToList();
+        }
+    }
+
+    private Task OnInternalChanged(TValue newValue)
+    {
+        Value = newValue;
+        return ValueChanged.InvokeAsync(newValue);
+    }
+
+    private string GetEnumDisplay(TValue value)
+    {
+        if (value is null) return string.Empty;
+
+        var type = typeof(TValue);
+        var name = Enum.GetName(type, value);
+
+        if (name is null)
+            return value.ToString() ?? string.Empty;
+
+        var mem = type.GetMember(name).FirstOrDefault();
+        var disp = mem?.GetCustomAttributes(typeof(DisplayAttribute), false)
+                       .Cast<DisplayAttribute>()
+                       .FirstOrDefault();
+
+        return disp?.Name ?? name;
+    }
+}

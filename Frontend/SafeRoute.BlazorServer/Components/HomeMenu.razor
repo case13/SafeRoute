@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using SafeRoute.Shared.Authorizations
+@inject NavigationManager Nav
+
+<div class="home-menu">
+
+    <AuthorizeView Policy="@PolicyNames.AdminOuUsuario">
+        <MudButton @onclick="GoProjetos">
+            Projetos
+        </MudButton>
+    </AuthorizeView>
+
+    <AuthorizeView Policy="@PolicyNames.AdminOuUsuario">
+        <MudButton @onclick="GoViolacoes">
+            Violações de Regras
+        </MudButton>
+    </AuthorizeView>
+
+    <AuthorizeView Policy="@PolicyNames.Administrador">
+        <MudButton @onclick="GoUsuarios">
+            Usuários
+        </MudButton>
+    </AuthorizeView>
+
+</div>
+
+@code {
+    private void GoProjetos() => Nav.NavigateTo("/projects");
+    private void GoViolacoes() => Nav.NavigateTo("/rule-violations");
+    private void GoUsuarios() => Nav.NavigateTo("/usuarios");
+}

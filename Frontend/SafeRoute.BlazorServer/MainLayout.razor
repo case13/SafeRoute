@@ -1,3 +1,44 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using SafeRoute.BlazorServer.Components.Navegation
+@inherits LayoutComponentBase
+@inject NavigationManager Nav
 
-<main> @Body </main>
+<AuthorizeView>
+    <Authorized>
+        <MudLayout>
+
+            <MudAppBar Elevation="1"
+                       Fixed="true"
+                       Style="background-color:#000080;">
+                <MudText Typo="Typo.h6">
+                    SafeRoute - Sistema de Gestão
+                </MudText>
+            </MudAppBar>
+
+            @if (IsHome)
+            {
+                <MudDrawer Open="true"
+                           Variant="DrawerVariant.Persistent"
+                           Elevation="1"
+                           Width="260px">
+                    <SideNav />
+                </MudDrawer>
+            }
+
+            <MudMainContent>
+                @Body
+            </MudMainContent>
+
+        </MudLayout>
+    </Authorized>
+
+    <NotAuthorized>
+        @Body
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private bool IsHome =>
+        Nav.Uri.EndsWith("/", StringComparison.OrdinalIgnoreCase) ||
+        Nav.Uri.EndsWith("/index", StringComparison.OrdinalIgnoreCase);
+}

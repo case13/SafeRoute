@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using SafeRoute.Shared.Authorizations
+
+<MudPaper Width="260px"
+          Elevation="0"
+          Class="sidenav-root">
+
+    <MudNavMenu Class="mud-width-full">
+
+        <MudText Typo="Typo.h6" Class="px-4 pt-2">
+            SafeRoute
+        </MudText>
+
+        <MudText Typo="Typo.body2"
+                 Class="px-4 mud-text-secondary">
+            Navegação
+        </MudText>
+
+        <MudDivider Class="my-2" />
+
+        <MudNavLink Href="/"
+                    Match="NavLinkMatch.All"
+                    IconColor="Color.Info"
+                    Style="color:royalblue;"
+                    Icon="@Icons.Material.Filled.Dashboard">
+            Dashboard
+        </MudNavLink>
+
+        <AuthorizeView Policy="@PolicyNames.Administrador">
+            <MudNavLink Href="/usuarios"
+                        IconColor="Color.Info"
+                        Style="color:royalblue;"
+                        Icon="@Icons.Material.Filled.People">
+                Usuários
+            </MudNavLink>
+        </AuthorizeView>
+
+        <MudNavGroup Title="Configurações"
+                     IconColor="Color.Info"
+                     Style="color:royalblue;"
+                     Icon="@Icons.Material.Filled.Settings"
+                     Expanded="true">
+
+            <AuthorizeView Policy="@PolicyNames.AdminOuUsuario">
+                <MudNavLink Href="/perfis"
+                            IconColor="Color.Info"
+                            Style="color:royalblue;"
+                            Icon="@Icons.Material.Filled.Badge">
+                    Perfis
+                </MudNavLink>
+            </AuthorizeView>
+
+            <MudNavLink Href="/seguranca"
+                        IconColor="Color.Info"
+                        Style="color:royalblue;"
+                        Icon="@Icons.Material.Filled.Security">
+                Segurança
+            </MudNavLink>
+
+        </MudNavGroup>
+
+    </MudNavMenu>
+
+</MudPaper>

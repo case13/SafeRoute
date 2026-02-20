@@ -1,0 +1,29 @@
+﻿@using MudBlazor
+@namespace SafeRoute.BlazorServer.Components.Dialogs
+
+<MudDialog>
+    <DialogContent>
+        @if (!string.IsNullOrWhiteSpace(Message))
+        {
+            <MudText Typo="Typo.body2" Class="mt-2">@Message</MudText>
+        }
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Color="Color.Default" OnClick="Cancel">@CancelText</MudButton>
+        <MudButton Color="@ConfirmColor" Variant="Variant.Filled" OnClick="Confirm">@ConfirmText</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public string Title { get; set; } = "Confirmação";
+    [Parameter] public string Message { get; set; } = "Tem certeza que deseja continuar?";
+    [Parameter] public string ConfirmText { get; set; } = "Confirmar";
+    [Parameter] public string CancelText { get; set; } = "Cancelar";
+    [Parameter] public Color ConfirmColor { get; set; } = Color.Error;
+
+    void Cancel() => MudDialog.Cancel();
+    void Confirm() => MudDialog.Close(DialogResult.Ok(true));
+}
