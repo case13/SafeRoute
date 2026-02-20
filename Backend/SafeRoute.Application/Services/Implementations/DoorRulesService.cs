@@ -1,4 +1,4 @@
-﻿using SafeRoute.Application.Dtos.Rules;
+﻿using SafeRoute.Shared.Dtos.Rules;
 using SafeRoute.Application.Services.Interfaces;
 using SafeRoute.Shared.Dtos.Ingestion.Doors;
 using SafeRoute.Shared.Enums.Rules;
@@ -26,7 +26,7 @@ namespace SafeRoute.Application.Services.Implementations
                     violations.Add(new GeneratedRuleViolationDto
                     {
                         ElementExternalId = (door.ExternalId ?? string.Empty).Trim(),
-                        ElementType = door.ElementType.ToString(),
+                        ElementType = door.ElementType,
                         RuleCode = "DOOR_MIN_WIDTH",
                         Message = "Largura mínima da porta não atendida.",
                         Severity = RuleSeverityEnum.Warning

@@ -59,10 +59,12 @@ namespace SafeRoute.Application.Services.Implementations
                 {
                     ProjectId = projectId,
                     ElementExternalId = (v.ElementExternalId ?? string.Empty).Trim(),
-                    ElementType = (v.ElementType ?? string.Empty).Trim(),
+                    ElementType = v.ElementType,
                     RuleCode = (v.RuleCode ?? string.Empty).Trim(),
                     Message = (v.Message ?? string.Empty).Trim(),
-                    Severity = v.Severity
+                    Severity = v.Severity,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
                 });
             }
 

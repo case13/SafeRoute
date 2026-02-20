@@ -63,7 +63,7 @@ namespace SafeRoute.Application.Services.Implementations
                 {
                     "rulecode" => query.Where(x => x.RuleCode.ToLower().Contains(text)),
                     "elementid" => query.Where(x => x.ElementExternalId.ToLower().Contains(text)),
-                    "elementtype" => query.Where(x => x.ElementType.ToLower().Contains(text)),
+                    "elementtype" => query.Where(x => x.ElementType.ToString().ToLower().Contains(text)),
                     "message" => query.Where(x => x.Message.ToLower().Contains(text)),
                     _ => query
                 };
@@ -101,7 +101,7 @@ namespace SafeRoute.Application.Services.Implementations
                     return new ReadRuleViolationDto();
 
                 entity.ElementExternalId = dto.ElementExternalId.Trim();
-                entity.ElementType = dto.ElementType.Trim();
+                entity.ElementType = dto.ElementType;
                 entity.RuleCode = dto.RuleCode.Trim();
                 entity.Message = dto.Message.Trim();
 
@@ -168,7 +168,7 @@ namespace SafeRoute.Application.Services.Implementations
                 foreach (var e in entities)
                 {
                     e.ElementExternalId = e.ElementExternalId.Trim();
-                    e.ElementType = e.ElementType.Trim();
+                    e.ElementType = e.ElementType;
                     e.RuleCode = e.RuleCode.Trim();
                     e.Message = e.Message.Trim();
                 }

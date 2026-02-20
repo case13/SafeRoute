@@ -38,8 +38,7 @@ namespace SafeRoute.Api.Controllers
         {
             if (projectId <= 0) 
                 return BadRequest("projectId é obrigatório.");
-
-            var result = await _service.GetPagedAsync(pageNumber, pageSize, projectId, filterColumn, filterText);
+            var result = await _service.GetPagedAsync(projectId, pageNumber, pageSize, filterColumn, filterText);
             return Ok(result);
         }
 

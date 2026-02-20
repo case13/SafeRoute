@@ -1,4 +1,4 @@
-﻿using SafeRoute.Application.Dtos.Rules;
+﻿using SafeRoute.Shared.Dtos.Rules;
 using SafeRoute.Shared.Dtos.Ingestion.Ramps;
 using System.Collections.Generic;
 using System.Threading.Tasks;

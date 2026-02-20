@@ -1,4 +1,4 @@
-﻿using SafeRoute.Application.Dtos.Rules;
+﻿using SafeRoute.Shared.Dtos.Rules;
 using SafeRoute.Application.Services.Interfaces;
 using SafeRoute.Shared.Dtos.Ingestion.Ramps;
 using SafeRoute.Shared.Enums.Rules;
@@ -26,7 +26,7 @@ namespace SafeRoute.Application.Services.Implementations
                     violations.Add(new GeneratedRuleViolationDto
                     {
                         ElementExternalId = (ramp.ExternalId ?? string.Empty).Trim(),
-                        ElementType = ramp.ElementType.ToString(),
+                        ElementType = ramp.ElementType,
                         RuleCode = "RAMP_MAX_SLOPE",
                         Message = "Inclinação máxima da rampa excedida.",
                         Severity = RuleSeverityEnum.Serious

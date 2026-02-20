@@ -158,16 +158,32 @@ namespace SafeRoute.Infrastructure.Data
             {
                 e.HasKey(x => x.Id);
 
-                e.Property(x => x.ElementExternalId).IsRequired();
-                e.Property(x => x.ElementType).IsRequired();
-                e.Property(x => x.RuleCode).IsRequired();
-                e.Property(x => x.Message).IsRequired();
-                e.Property(x => x.Severity).IsRequired();
+                e.Property(x => x.ElementExternalId)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                e.Property(x => x.ElementType)
+                    .IsRequired()
+                    .HasConversion<int>();
+
+                e.Property(x => x.RuleCode)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                e.Property(x => x.Message)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                e.Property(x => x.Severity)
+                    .IsRequired()
+                    .HasConversion<int>();
 
                 e.HasOne(x => x.Project)
                     .WithMany(p => p.RuleViolations)
                     .HasForeignKey(x => x.ProjectId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasIndex(x => x.ProjectId);
             });
         }
     }

@@ -38,9 +38,10 @@ internal class Program
                 c.RoutePrefix = "swagger";
             });
         }
-        Console.WriteLine("JWT KEY => " + builder.Configuration["JwtSettings:Key"]);
-        Console.WriteLine("JWT ISSUER => " + builder.Configuration["JwtSettings:Issuer"]);
-        Console.WriteLine("JWT AUDIENCE => " + builder.Configuration["JwtSettings:Audience"]);
+
+        //Console.WriteLine("JWT KEY => " + builder.Configuration["JwtSettings:Key"]);
+        //Console.WriteLine("JWT ISSUER => " + builder.Configuration["JwtSettings:Issuer"]);
+        //Console.WriteLine("JWT AUDIENCE => " + builder.Configuration["JwtSettings:Audience"]);
 
         app.UseHttpsRedirection();
 

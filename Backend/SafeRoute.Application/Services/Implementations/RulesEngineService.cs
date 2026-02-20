@@ -1,4 +1,4 @@
-﻿using SafeRoute.Application.Dtos.Rules;
+﻿using SafeRoute.Shared.Dtos.Rules;
 using SafeRoute.Application.Services.Interfaces;
 using SafeRoute.Shared.Dtos.Ingestion.Project;
 using System.Collections.Generic;
