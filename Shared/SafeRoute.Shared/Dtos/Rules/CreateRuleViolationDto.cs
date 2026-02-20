@@ -1,4 +1,5 @@
-﻿using SafeRoute.Shared.Enums.Rules;
+﻿using SafeRoute.Shared.Enums.Elements;
+using SafeRoute.Shared.Enums.Rules;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +17,7 @@ namespace SafeRoute.Shared.Dtos.Rules
         public string ElementExternalId { get; set; } = default!;
 
         [Required(ErrorMessage = "O tipo do elemento é obrigatório.")]
-        public string ElementType { get; set; } = default!;
+        public ElementTypeEnum ElementType { get; set; } 
 
         [Required(ErrorMessage = "O código da regra é obrigatório.")]
         public string RuleCode { get; set; } = default!;

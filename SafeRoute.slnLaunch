@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Novo Perfil",
+    "Projects": [
+      {
+        "Path": "Backend\\SafeRoute.Api\\SafeRoute.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Frontend\\SafeRoute.BlazorServer\\SafeRoute.BlazorServer.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

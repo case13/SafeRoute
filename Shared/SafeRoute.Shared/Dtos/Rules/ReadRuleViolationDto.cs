@@ -1,4 +1,5 @@
-﻿using SafeRoute.Shared.Enums.Rules;
+﻿using SafeRoute.Shared.Enums.Elements;
+using SafeRoute.Shared.Enums.Rules;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,7 @@ namespace SafeRoute.Shared.Dtos.Rules
         public int ProjectId { get; set; }
 
         public string ElementExternalId { get; set; } = default!;
-        public string ElementType { get; set; } = default!;
+        public ElementTypeEnum ElementType { get; set; } = default!;
         public string RuleCode { get; set; } = default!;
         public string Message { get; set; } = default!;
         public RuleSeverityEnum Severity { get; set; }
