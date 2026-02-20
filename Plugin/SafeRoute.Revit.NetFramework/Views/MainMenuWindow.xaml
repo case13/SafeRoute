@@ -1,0 +1,98 @@
+﻿<Window x:Class="SafeRoute.Revit.NetFramework.Views.MainMenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SafeRoute - Menu"
+        Width="640" Height="674"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#F6F7FB">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="64"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0"
+                Background="White"
+                CornerRadius="12"
+                Padding="14"
+                BorderBrush="#E6E8EF"
+                BorderThickness="1">
+            <TextBlock Text="{Binding LoggedUserText}"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Foreground="#1F2A37"/>
+        </Border>
+
+        <!-- Center content -->
+        <Border Grid.Row="1"
+                Margin="0,14,0,14"
+                Background="White"
+                CornerRadius="12"
+                BorderBrush="#E6E8EF"
+                BorderThickness="1">
+            <Grid>
+                <Image Source="pack://application:,,,/SafeRoute.Revit.NetFramework;component/resources/menu-saferoute.png"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Margin="20"
+                       Opacity="0.95"/>
+            </Grid>
+        </Border>
+
+        <!-- Footer bar -->
+        <Border Grid.Row="2"
+                Background="White"
+                CornerRadius="12"
+                BorderBrush="#E6E8EF"
+                BorderThickness="1"
+                Padding="12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="220"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Buttons -->
+                <StackPanel Orientation="Horizontal"
+                            Grid.Column="0"
+                            VerticalAlignment="Center">
+                    <Button Content="Sair"
+                            Width="110"
+                            Height="34"
+                            Margin="0,0,10,0"
+                            Click="Exit_Click"/>
+                    <Button Content="Carregar dados"
+                            Width="140"
+                            Height="34"
+                            Click="LoadData_Click"/>
+                </StackPanel>
+
+                <!-- Spacer -->
+                <Grid Grid.Column="2"/>
+
+                <!-- Progress -->
+                <StackPanel Grid.Column="3"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{Binding ProgressText}"
+                               FontSize="12"
+                               Foreground="#6B7280"
+                               Margin="0,0,0,6"/>
+                    <ProgressBar Height="20"
+                                 Minimum="0"
+                                 Maximum="100"
+                                 Value="{Binding ProgressValue}"
+                                 IsIndeterminate="{Binding IsBusy}"
+                                 BorderThickness="0"
+                                 Background="#EEF2FF"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
