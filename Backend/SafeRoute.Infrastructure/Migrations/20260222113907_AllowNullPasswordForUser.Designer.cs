@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SafeRoute.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SafeRoute.Infrastructure.Data;
 namespace SafeRoute.Infrastructure.Migrations
 {
     [DbContext(typeof(SafeRouteDbContext))]
-    partial class SafeRouteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260222113907_AllowNullPasswordForUser")]
+    partial class AllowNullPasswordForUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,9 +242,11 @@ namespace SafeRoute.Infrastructure.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordSalt")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")

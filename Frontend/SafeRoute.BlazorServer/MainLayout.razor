@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using SafeRoute.BlazorServer.Components.Navegation
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
 @inherits LayoutComponentBase
 @inject NavigationManager Nav
 
@@ -11,7 +13,13 @@
                        Fixed="true"
                        Style="background-color:#000080;">
                 <MudText Typo="Typo.h6">
-                    SafeRoute - Sistema de Gestão
+                    SafeRoute - BIM Validation Platform
+                </MudText>
+
+                <MudSpacer />
+
+                <MudText Typo="Typo.body2" Class="mr-2" Style="color:white;">
+                    @_userLabel
                 </MudText>
             </MudAppBar>
 
@@ -38,6 +46,30 @@
 </AuthorizeView>
 
 @code {
+
+    private string _userLabel = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = state.User;
+
+        if (user?.Identity?.IsAuthenticated == true)
+        {
+            var email =
+                user.FindFirst("email")?.Value ??
+                user.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ??
+                user.Identity?.Name ??
+                "Usuário";
+
+            _userLabel = $"Logado: {email}";
+        }
+        else
+        {
+            _userLabel = "";
+        }
+    }
+
     private bool IsHome =>
         Nav.Uri.EndsWith("/", StringComparison.OrdinalIgnoreCase) ||
         Nav.Uri.EndsWith("/index", StringComparison.OrdinalIgnoreCase);

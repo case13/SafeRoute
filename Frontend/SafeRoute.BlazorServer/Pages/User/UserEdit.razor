@@ -1,0 +1,100 @@
+﻿@using MudBlazor
+@using SafeRoute.BlazorServer.Components.Forms
+@using SafeRoute.BlazorServer.Components.Selects
+@using SafeRoute.BlazorServer.ViewModels.Interfaces
+@using SafeRoute.Shared.Dtos.User
+@using SafeRoute.Shared.Enums.Tipos
+@inject IUserViewModel Vm
+
+<FormBaseDialog TModel="UpdateUserDto"
+                Subtitle="Editar Usuário"
+                SaveButtonText="Salvar"
+                Model="Vm.Edit"
+                OnCancel="Cancel"
+                OnSave="SaveAsync">
+
+    <ChildContent Context="m">
+
+        <SelectBox TValue="int?"
+                   Options="Vm.CompanyOptions"
+                   Label="Empresa"
+                   Placeholder="Selecione a empresa..."
+                   Required="true"
+                   ShowPlaceholder="true"
+                   @bind-Value="m.CompanyId" />
+
+        <MudTextField T="string"
+                      Label="Nome"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.Name"
+                      For="@(() => m.Name)"
+                      Required="true"
+                      FullWidth="true" />
+
+        <MudTextField T="string"
+                      Label="Documento"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.Document"
+                      FullWidth="true" />
+
+        <MudTextField T="string"
+                      Label="Email"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.Email"
+                      For="@(() => m.Email)"
+                      Required="true"
+                      FullWidth="true" />
+
+        <SelectBox TValue="UserTypeEnum"
+                   EnumMode="true"
+                   Label="Tipo de usuário"
+                   @bind-Value="m.UserType" />
+
+    </ChildContent>
+
+</FormBaseDialog>
+
+@code {
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Vm.LoadCompanyOptionsAsync();
+
+        if (Vm.Selected != null && Vm.Selected.Id > 0)
+        {
+            Vm.Edit = new UpdateUserDto
+            {
+                Id = Vm.Selected.Id,
+                CompanyId = Vm.Selected.CompanyId,
+                Name = Vm.Selected.Name,
+                Document = Vm.Selected.Document,
+                Email = Vm.Selected.Email,
+                UserType = Vm.Selected.UserType,
+                StatusUser = Vm.Selected.UserStatus
+            };
+        }
+    }
+
+    private Task Cancel()
+    {
+        MudDialog.Cancel();
+        return Task.CompletedTask;
+    }
+
+    private async Task<bool> SaveAsync()
+    {
+        if (Vm.Edit == null || Vm.Edit.Id <= 0)
+            return false;
+
+        if (Vm.Edit.CompanyId <= 0)
+            return false;
+
+        var ok = await Vm.SaveEditAsync();
+
+        if (ok)
+            MudDialog.Close(DialogResult.Ok(true));
+
+        return ok;
+    }
+}

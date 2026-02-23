@@ -6,7 +6,8 @@ namespace SafeRoute.BlazorServer.ViewModels.Interfaces
     {
         string Email { get; set; }
         string Password { get; set; }
-
+        bool RequiresPasswordSetup { get; }
+        string PasswordSetupEmail { get; }
         bool IsBusy { get; }
         string Error { get; }
 

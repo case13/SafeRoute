@@ -11,5 +11,7 @@ namespace SafeRoute.Application.Services.Interfaces
     {
         Task<LoginResultDto> LoginAsync(LoginRequestDto dto);
         Task<LoginResultDto> RefreshAsync(string refreshToken);
+        Task SetPasswordAsync(SetPasswordDto dto);
+        Task ChangePasswordAsync(int userId, ChangePasswordRequestDto dto);
     }
 }

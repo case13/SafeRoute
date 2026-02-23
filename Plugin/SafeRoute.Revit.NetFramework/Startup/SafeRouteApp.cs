@@ -18,9 +18,6 @@ namespace SafeRoute.Revit.NetFramework.Startup
                 TryCreateTab(app, TabName);
 
                 var panel = GetOrCreatePanel(app, TabName, PanelName);
-                
-                TaskDialog.Show("g.resources keys", ResourcesDebug.DumpGResources());
-
                 var assemblyPath = Assembly.GetExecutingAssembly().Location;
                 var commandType = "SafeRoute.Revit.NetFramework.Commands.OpenSafeRouteCommand";
 

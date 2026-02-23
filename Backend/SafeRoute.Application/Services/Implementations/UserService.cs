@@ -68,14 +68,15 @@ namespace SafeRoute.Application.Services.Implementations
                 var existente = await _repository.GetByEmailAsync(dto.Email);
                 if (existente != null)
                     throw new Exception("Email já cadastrado.");
-                
-                var user = _mapper.Map<User>(dto);
-                var (hash, salt) = _passwordHasher.HashPassword(dto.Password);
 
-                user.PasswordHash = hash;
-                user.PasswordSalt = salt;
+                var user = _mapper.Map<User>(dto);
+
+                // Primeiro acesso: não define senha aqui
+                user.PasswordHash = null;
+                user.PasswordSalt = null;
 
                 user.CreatedAt = DateTime.UtcNow;
+                user.UpdatedAt = null;
                 user.IsActive = true;
 
                 await _repository.AddAsync(user);

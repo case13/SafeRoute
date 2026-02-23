@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\menu-saferoute.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Shared\SafeRoute.Shared\SafeRoute.Shared.csproj" />
   </ItemGroup>
 
@@ -17,6 +21,10 @@
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="8.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="wwwroot\images\menu-saferoute.png" />
   </ItemGroup>
 
 </Project>

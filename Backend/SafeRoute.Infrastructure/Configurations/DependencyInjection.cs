@@ -44,6 +44,7 @@ namespace SafeRoute.Infrastructure.Configurations
             services.AddScoped<ICurrentCompany, CurrentCompany>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IRuleViolationRepository, RuleViolationRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
 
             // Services
             services.AddScoped<IPasswordHasherService, PasswordHasherService>();
@@ -54,6 +55,8 @@ namespace SafeRoute.Infrastructure.Configurations
             services.AddScoped<IRulesEngineService, RulesEngineService>();
             services.AddScoped<IDoorRulesService, DoorRulesService>();
             services.AddScoped<IRampRulesService, RampRulesService>();
+            services.AddScoped<ICompanyService, CompanyService>();
+            
 
             // Security
             services.AddScoped<IPasswordHasher, PasswordHasher>();

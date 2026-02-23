@@ -75,11 +75,17 @@
 
     private async Task LoginAsync()
     {
-        Console.WriteLine("LOGIN CLICK");
         var ok = await LoginVM.LoginAsync();
-        Console.WriteLine("LOGIN OK => " + ok);
+        if (!ok)
+            return;
 
-        if (ok)
-            Nav.NavigateTo("/", forceLoad: true);
+        if (LoginVM.RequiresPasswordSetup)
+        {
+            var email = Uri.EscapeDataString(LoginVM.PasswordSetupEmail ?? LoginVM.Email);
+            Nav.NavigateTo($"/set-password?email={email}", forceLoad: true);
+            return;
+        }
+
+        Nav.NavigateTo("/", forceLoad: true);
     }
 }

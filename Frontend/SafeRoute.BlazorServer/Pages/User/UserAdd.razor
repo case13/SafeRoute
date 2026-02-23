@@ -1,0 +1,79 @@
+﻿@using MudBlazor
+@using SafeRoute.BlazorServer.Components.Forms
+@using SafeRoute.BlazorServer.Components.Selects
+@using SafeRoute.BlazorServer.ViewModels.Interfaces
+@using SafeRoute.Shared.Dtos.User
+@using SafeRoute.Shared.Enums.Tipos
+@inject IUserViewModel Vm
+
+<FormBaseDialog TModel="CreateUserDto"
+                Subtitle="Novo Usuário"
+                SaveButtonText="Gravar"
+                Model="Vm.New"
+                OnCancel="Cancel"
+                OnSave="SaveAsync">
+
+    <ChildContent Context="m">
+
+        <SelectBox TValue="int?"
+                   Options="Vm.CompanyOptions"
+                   Label="Empresa"
+                   Placeholder="Selecione a empresa..."
+                   Required="true"
+                   ShowPlaceholder="true"
+                   @bind-Value="m.CompanyId" />
+
+        <MudTextField T="string"
+                      Label="Nome"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.Name"
+                      Required="true"
+                      FullWidth="true" />
+
+        <MudTextField T="string"
+                      Label="Documento"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.Document"
+                      FullWidth="true" />
+
+        <MudTextField T="string"
+                      Label="Email"
+                      Variant="Variant.Outlined"
+                      @bind-Value="m.Email"
+                      FullWidth="true" />
+
+        <SelectBox TValue="UserTypeEnum"
+                   EnumMode="true"
+                   Label="Esfera"
+                   @bind-Value="m.UserType" />
+
+    </ChildContent>
+
+</FormBaseDialog>
+
+@code {
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Vm.LoadCompanyOptionsAsync();
+    }
+
+    private Task Cancel()
+    {
+        MudDialog.Cancel();
+        return Task.CompletedTask;
+    }
+
+    private async Task<bool> SaveAsync()
+    {
+        if (Vm.New.CompanyId <= 0)
+            return false;
+
+        var ok = await Vm.CreateAsync();
+        if (ok)
+            MudDialog.Close(DialogResult.Ok(true));
+
+        return ok;
+    }
+}

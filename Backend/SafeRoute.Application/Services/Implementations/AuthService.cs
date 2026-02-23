@@ -28,6 +28,69 @@ namespace SafeRoute.Application.Services.Implementations
             _refreshTokenRepository = refreshTokenRepository;
         }
 
+        public async Task ChangePasswordAsync(int userId, ChangePasswordRequestDto dto)
+        {
+            if (dto == null)
+                throw new Exception("Dados inválidos.");
+
+            var user = await _usuarioRepository.GetByIdAsync(userId);
+            if (user == null)
+                throw new UnauthorizedAccessException("Usuário inválido.");
+
+            if (string.IsNullOrWhiteSpace(user.PasswordHash) || string.IsNullOrWhiteSpace(user.PasswordSalt))
+                throw new Exception("Usuário ainda não possui senha definida.");
+
+            var ok = _passwordHasherService.Verify(dto.CurrentPassword, user.PasswordHash, user.PasswordSalt);
+            if (!ok)
+                throw new UnauthorizedAccessException("Senha atual inválida.");
+
+            var (hash, salt) = _passwordHasherService.HashPassword(dto.NewPassword);
+
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+
+            await _usuarioRepository.UpdateAsync(user);
+            await _usuarioRepository.SaveChangesAsync();
+        }
+
+        public async Task SetPasswordAsync(SetPasswordDto dto)
+        {
+            if (dto == null)
+                throw new ArgumentException("Dados inválidos.");
+
+            var email = (dto.Email ?? string.Empty).Trim();
+
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Email é obrigatório.");
+
+            if (string.IsNullOrWhiteSpace(dto.Password))
+                throw new ArgumentException("Senha é obrigatória.");
+
+            if (dto.Password != dto.ConfirmPassword)
+                throw new ArgumentException("As senhas não conferem.");
+
+            var usuario = await _usuarioRepository.GetByEmailForLoginAsync(email);
+
+            if (usuario == null)
+                throw new UnauthorizedAccessException("Usuário não encontrado.");
+
+            if (!usuario.IsActive)
+                throw new UnauthorizedAccessException("Usuário inativo.");
+
+            // Impede redefinir senha por esse fluxo
+            if (!string.IsNullOrWhiteSpace(usuario.PasswordHash))
+                throw new UnauthorizedAccessException("Senha já definida.");
+
+            var (hash, salt) = _passwordHasherService.HashPassword(dto.Password);
+
+            usuario.PasswordHash = hash;
+            usuario.PasswordSalt = salt;
+
+            await _usuarioRepository.UpdateAsync(usuario);
+            await _usuarioRepository.SaveChangesAsync();
+        }
+
+
         public async Task<LoginResultDto> LoginAsync(LoginRequestDto dto)
         {
             var usuario = await _usuarioRepository
@@ -35,6 +98,20 @@ namespace SafeRoute.Application.Services.Implementations
 
             if (usuario == null)
                 throw new UnauthorizedAccessException("Usuário ou senha inválidos");
+
+            // PRIMEIRO ACESSO: ainda não tem senha definida
+            if (string.IsNullOrWhiteSpace(usuario.PasswordHash) || string.IsNullOrWhiteSpace(usuario.PasswordSalt))
+            {
+                return new LoginResultDto
+                {
+                    UserId = usuario.Id,
+                    Name = usuario.Name,
+                    Email = usuario.Email,
+                    RequiresPasswordSetup = true,
+                    AccessToken = string.Empty,
+                    RefreshToken = string.Empty
+                };
+            }
 
             var passwordOk = _passwordHasherService.Verify(
                 dto.Password,
@@ -58,7 +135,8 @@ namespace SafeRoute.Application.Services.Implementations
                 Name = usuario.Name,
                 Email = usuario.Email,
                 AccessToken = accessToken,
-                RefreshToken = refreshToken.Token
+                RefreshToken = refreshToken.Token,
+                RequiresPasswordSetup = false
             };
         }
 

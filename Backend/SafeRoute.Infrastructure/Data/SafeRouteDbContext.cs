@@ -118,10 +118,10 @@ namespace SafeRoute.Infrastructure.Data
                     .IsUnique();
 
                 e.Property(x => x.PasswordHash)
-                    .IsRequired();
+                    .IsRequired(false);
 
                 e.Property(x => x.PasswordSalt)
-                    .IsRequired();
+                    .IsRequired(false);
 
                 e.Property(x => x.UserType)
                     .IsRequired();

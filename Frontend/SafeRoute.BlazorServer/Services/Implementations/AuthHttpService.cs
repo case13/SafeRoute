@@ -30,13 +30,34 @@ namespace SafeRoute.BlazorServer.Services.Implementations
             _authStateNotifier = authStateNotifier;
         }
 
-        public async Task<bool> LoginAsync(string email, string password)
+        public async Task<bool> SetPasswordAsync(SetPasswordDto dto)
+        {
+            var http = _httpClientFactory.CreateClient("ApiAuth");
+
+            var response = await http.PostAsJsonAsync("api/auth/set-password", dto);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> ChangePasswordAsync(ChangePasswordRequestDto dto)
+        {
+            var http = _httpClientFactory.CreateClient("Api");
+
+            var token = await GetAccessTokenAsync();
+            if (!string.IsNullOrWhiteSpace(token))
+                http.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await http.PutAsJsonAsync("api/auth/change-password", dto);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<LoginResultDto?> LoginAsync(string email, string password)
         {
             email = (email ?? "").Trim();
             password = (password ?? "").Trim();
 
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-                return false;
+            if (string.IsNullOrWhiteSpace(email))
+                return null;
 
             var http = _httpClientFactory.CreateClient("ApiAuth");
 
@@ -48,11 +69,17 @@ namespace SafeRoute.BlazorServer.Services.Implementations
 
             var response = await http.PostAsJsonAsync("api/auth/login", request);
             if (!response.IsSuccessStatusCode)
-                return false;
+                return null;
 
             var data = await response.Content.ReadFromJsonAsync<LoginResultDto>();
-            if (data == null || string.IsNullOrWhiteSpace(data.AccessToken))
-                return false;
+            if (data == null)
+                return null;
+            
+            if (data.RequiresPasswordSetup)
+                return data;
+            
+            if (string.IsNullOrWhiteSpace(data.AccessToken))
+                return null;
 
             var accessToken = data.AccessToken ?? "";
             var refreshToken = data.RefreshToken ?? "";
@@ -64,14 +91,12 @@ namespace SafeRoute.BlazorServer.Services.Implementations
             }
             catch (InvalidOperationException)
             {
-                // Pode acontecer em prerender (JS interop indisponível).
-                // Mantém ao menos em memória via TokenStore.
             }
 
             _tokenStore.Set(accessToken, refreshToken);
             _authStateNotifier.NotifyUserAuthentication(accessToken);
 
-            return true;
+            return data;
         }
 
         public async Task LogoutAsync()

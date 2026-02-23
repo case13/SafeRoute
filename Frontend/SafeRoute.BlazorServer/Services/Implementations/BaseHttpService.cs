@@ -1,4 +1,7 @@
 ﻿using SafeRoute.BlazorServer.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -31,8 +34,9 @@ namespace SafeRoute.BlazorServer.Services.Implementations
             }
         }
 
-        protected virtual async Task<T> GetAsync<T>(string url, CancellationToken ct = default)
-            where T : new()
+        protected virtual async Task<TDto?> GetAsync<TDto>(
+            string url,
+            CancellationToken ct = default)
         {
             try
             {
@@ -40,20 +44,41 @@ namespace SafeRoute.BlazorServer.Services.Implementations
 
                 var response = await Http.GetAsync(url, ct);
                 if (!response.IsSuccessStatusCode)
-                    return new T();
+                    return default;
 
-                return await response.Content.ReadFromJsonAsync<T>(cancellationToken: ct)
-                       ?? new T();
+                return await response.Content.ReadFromJsonAsync<TDto>(cancellationToken: ct);
             }
             catch
             {
-                return new T();
+                return default;
             }
         }
 
-        protected virtual async Task<TResponse> PostAsync<TRequest, TResponse>(
-            string url, TRequest body, CancellationToken ct = default)
-            where TResponse : new()
+        protected virtual async Task<IEnumerable<TDto>> GetAllAsync<TDto>(
+            string url,
+            CancellationToken ct = default)
+        {
+            try
+            {
+                await EnsureAuthHeaderAsync();
+
+                var response = await Http.GetAsync(url, ct);
+                if (!response.IsSuccessStatusCode)
+                    return Enumerable.Empty<TDto>();
+
+                return await response.Content.ReadFromJsonAsync<IEnumerable<TDto>>(cancellationToken: ct)
+                       ?? Enumerable.Empty<TDto>();
+            }
+            catch
+            {
+                return Enumerable.Empty<TDto>();
+            }
+        }
+
+        protected virtual async Task<TResponseDto?> PostAsync<TRequestDto, TResponseDto>(
+            string url,
+            TRequestDto body,
+            CancellationToken ct = default)
         {
             try
             {
@@ -61,20 +86,20 @@ namespace SafeRoute.BlazorServer.Services.Implementations
 
                 var response = await Http.PostAsJsonAsync(url, body, ct);
                 if (!response.IsSuccessStatusCode)
-                    return new TResponse();
+                    return default;
 
-                return await response.Content.ReadFromJsonAsync<TResponse>(cancellationToken: ct)
-                       ?? new TResponse();
+                return await response.Content.ReadFromJsonAsync<TResponseDto>(cancellationToken: ct);
             }
             catch
             {
-                return new TResponse();
+                return default;
             }
         }
 
-        protected virtual async Task<TResponse> PutAsync<TRequest, TResponse>(
-            string url, TRequest body, CancellationToken ct = default)
-            where TResponse : new()
+        protected virtual async Task<TResponseDto?> PutAsync<TRequestDto, TResponseDto>(
+            string url,
+            TRequestDto body,
+            CancellationToken ct = default)
         {
             try
             {
@@ -82,18 +107,19 @@ namespace SafeRoute.BlazorServer.Services.Implementations
 
                 var response = await Http.PutAsJsonAsync(url, body, ct);
                 if (!response.IsSuccessStatusCode)
-                    return new TResponse();
+                    return default;
 
-                return await response.Content.ReadFromJsonAsync<TResponse>(cancellationToken: ct)
-                       ?? new TResponse();
+                return await response.Content.ReadFromJsonAsync<TResponseDto>(cancellationToken: ct);
             }
             catch
             {
-                return new TResponse();
+                return default;
             }
         }
 
-        protected virtual async Task<bool> DeleteAsync(string url, CancellationToken ct = default)
+        protected virtual async Task<bool> DeleteAsync(
+            string url,
+            CancellationToken ct = default)
         {
             try
             {

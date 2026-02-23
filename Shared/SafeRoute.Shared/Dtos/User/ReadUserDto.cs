@@ -16,5 +16,9 @@ namespace SafeRoute.Shared.Dtos.User
         public string Email { get; set; } = string.Empty;
         public UserTypeEnum UserType { get; set; }
         public StatusBasicEnum UserStatus { get; set; }
+
+        public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

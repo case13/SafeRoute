@@ -1,0 +1,160 @@
+﻿@page "/users"
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using SafeRoute.BlazorServer.Components.Grids
+@using SafeRoute.BlazorServer.Components.Dialogs
+@using SafeRoute.Shared.Dtos.User
+@inject SafeRoute.BlazorServer.ViewModels.Interfaces.IUserViewModel Vm
+@inject IDialogService DialogService
+@inject NavigationManager Nav
+
+<SimpleGrid TItem="ReadUserDto"
+            @ref="_grid"
+            Subtitle="Usuários"
+            RowsPerPage="10"
+            ServerData="LoadServerData"
+            ShowAdd="true"
+            AddClick="OpenCreateDialog"
+            OnSearchChanged="OnSearchChanged">
+
+    <Header>
+        <MudTh>Id</MudTh>
+        <MudTh>Nome</MudTh>
+        <MudTh>Documento</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>Tipo</MudTh>
+        <MudTh>Ativo</MudTh>
+        <MudTh style="width:120px;">Ações</MudTh>
+
+    </Header>
+
+    <RowTemplate Context="row">
+        <MudTd DataLabel="Id">@row.Id</MudTd>
+        <MudTd DataLabel="Nome">@row.Name</MudTd>
+        <MudTd DataLabel="Documento">@row.Document</MudTd>
+        <MudTd DataLabel="Email">@row.Email</MudTd>
+        <MudTd DataLabel="Tipo">@row.UserType</MudTd>
+        <MudTd DataLabel="Ativo">@row.IsActive</MudTd>
+
+        <MudTd DataLabel="Ações">
+            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                           Color="Color.Info"
+                           Size="Size.Small"
+                           OnClick="@(() => OpenEditDialog(row.Id))" />
+
+            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                           Color="Color.Error"
+                           Size="Size.Small"
+                           OnClick="@(() => DeleteAsync(row))" />
+        </MudTd>
+    </RowTemplate>
+
+</SimpleGrid>
+
+
+@code {
+    private string _search = "";
+    private SimpleGrid<ReadUserDto>? _grid;
+
+    private async Task OpenCreateDialog()
+    {
+        var options = new DialogOptions
+        {
+            BackdropClick = false,
+            CloseOnEscapeKey = false,
+            CloseButton = false,
+            NoHeader = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = await DialogService.ShowAsync<UserAdd>("", options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && _grid is not null)
+            await _grid.ReloadAsync();
+    }
+
+
+    private async Task OpenEditDialog(int id)
+    {
+        if (id <= 0)
+            return;
+
+        var parameters = new DialogParameters
+        {
+            ["UserId"] = id
+        };
+
+        var options = new DialogOptions
+        {
+            BackdropClick = false,
+            CloseOnEscapeKey = false,
+            CloseButton = false,
+            NoHeader = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = await DialogService.ShowAsync<UserEdit>(
+            "",
+            parameters,
+            options);
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled && _grid is not null)
+            await _grid.ReloadAsync();
+    }
+
+
+    private Task OnSearchChanged(string? text)
+    {
+        _search = text ?? "";
+        Vm.SearchTerm = _search;
+        Vm.SetPage(1);
+        return Task.CompletedTask;
+    }
+
+    private async Task<TableData<ReadUserDto>> LoadServerData(TableState state, CancellationToken ct)
+    {
+        Vm.PageNumber = state.Page + 1;
+        Vm.PageSize = state.PageSize;
+
+        await Vm.LoadPagedAsync();
+
+        return new TableData<ReadUserDto>
+        {
+            Items = Vm.Users,
+            TotalItems = Vm.TotalCount
+        };
+    }
+
+    private async Task DeleteAsync(ReadUserDto row)
+    {
+        if (row is null || row.Id <= 0)
+            return;
+
+        var ok = await DialogService.ShowConfirmDialogAsync(
+            "Excluir Usuário",
+            $"Confirma excluir o usuário '{row.Name}'?",
+            confirmText: "Excluir",
+            cancelText: "Cancelar",
+            confirmColor: Color.Error);
+
+        if (!ok)
+            return;
+
+        await Vm.DeleteAsync(row.Id);
+
+        if (_grid is not null)
+            await _grid.ReloadAsync();
+
+    }
+
+
+
+
+}

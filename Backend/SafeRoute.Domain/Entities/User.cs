@@ -12,8 +12,8 @@ namespace SafeRoute.Domain.Entities
     {
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string PasswordHash { get; set; } = null;
-        public string PasswordSalt { get; set; } = null!;
+        public string? PasswordHash { get; set; } = null;
+        public string? PasswordSalt { get; set; } = null!;
         public string Document { get; set; } = null!;
 
         public int CompanyId { get; set; } = 0;
