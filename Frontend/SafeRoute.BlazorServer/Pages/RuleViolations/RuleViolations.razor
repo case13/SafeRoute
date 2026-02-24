@@ -1,0 +1,170 @@
+﻿@page "/projects/{ProjectId:int}/violations"
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using SafeRoute.BlazorServer.Components.Grids
+@using SafeRoute.BlazorServer.Components.Dialogs
+@using SafeRoute.Shared.Dtos.Rules
+@inject SafeRoute.BlazorServer.ViewModels.Interfaces.IRuleViolationViewModel Vm
+@inject IDialogService DialogService
+@inject NavigationManager Nav
+
+<SimpleGrid TItem="ReadRuleViolationDto"
+            @ref="_grid"
+            Subtitle="Violações de Regras"
+            RowsPerPage="10"
+            ServerData="LoadServerData"
+            ShowAdd="true"
+            AddClick="OpenCreateDialog"
+            OnSearchChanged="OnSearchChanged"
+            ShowBack="true"
+            BackClick="GoBack"
+            ShowHome="true">
+
+    <Header>
+        <MudTh>Id</MudTh>
+        <MudTh>Elemento</MudTh>
+        <MudTh>Tipo</MudTh>
+        <MudTh>Regra</MudTh>
+        <MudTh>Severidade</MudTh>
+        <MudTh>Ativo</MudTh>
+        <MudTh style="width:120px;">Ações</MudTh>
+    </Header>
+
+    <RowTemplate Context="row">
+        <MudTd DataLabel="Id">@row.Id</MudTd>
+        <MudTd DataLabel="Elemento">@row.ElementExternalId</MudTd>
+        <MudTd DataLabel="Tipo">@row.ElementType</MudTd>
+        <MudTd DataLabel="Regra">@row.RuleCode</MudTd>
+        <MudTd DataLabel="Severidade">@row.Severity</MudTd>
+        <MudTd DataLabel="Ativo">@row.IsActive</MudTd>
+
+        <MudTd DataLabel="Ações">
+            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                           Color="Color.Info"
+                           Size="Size.Small"
+                           OnClick="@(() => OpenEditDialog(row.Id))" />
+
+            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                           Color="Color.Error"
+                           Size="Size.Small"
+                           OnClick="@(() => DeleteAsync(row))" />
+        </MudTd>
+    </RowTemplate>
+
+</SimpleGrid>
+
+@code {
+    [Parameter] public int ProjectId { get; set; }
+
+    private string _search = "";
+    private SimpleGrid<ReadRuleViolationDto>? _grid;
+
+    protected override Task OnParametersSetAsync()
+    {
+        Vm.ProjectId = ProjectId;
+        Vm.SetPage(1);
+        return Task.CompletedTask;
+    }
+
+    private Task GoBack()
+    {
+        Nav.NavigateTo("/projects");
+        return Task.CompletedTask;
+    }
+
+    private Task OnSearchChanged(string? text)
+    {
+        _search = text ?? "";
+        Vm.SearchTerm = _search;
+        Vm.SetPage(1);
+        return Task.CompletedTask;
+    }
+
+    private async Task<TableData<ReadRuleViolationDto>> LoadServerData(TableState state, CancellationToken ct)
+    {
+        Vm.PageNumber = state.Page + 1;
+        Vm.PageSize = state.PageSize;
+
+        await Vm.LoadPagedAsync();
+
+        return new TableData<ReadRuleViolationDto>
+        {
+            Items = Vm.Items,
+            TotalItems = Vm.TotalCount
+        };
+    }
+
+    private async Task OpenCreateDialog()
+    {
+        Vm.New = new CreateRuleViolationDto
+        {
+            ProjectId = ProjectId
+        };
+
+        var options = new DialogOptions
+        {
+            BackdropClick = false,
+            CloseOnEscapeKey = true,
+            CloseButton = false,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = await DialogService.ShowAsync<RuleViolationAdd>("", options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && _grid is not null)
+            await _grid.ReloadAsync();
+    }
+
+    private async Task OpenEditDialog(int id)
+    {
+        if (id <= 0)
+            return;
+
+        await Vm.LoadByIdAsync(id);
+
+        var parameters = new DialogParameters
+        {
+            ["RuleViolationId"] = id
+        };
+
+        var options = new DialogOptions
+        {
+            BackdropClick = false,
+            CloseOnEscapeKey = true,
+            CloseButton = false,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = await DialogService.ShowAsync<RuleViolationEdit>("", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && _grid is not null)
+            await _grid.ReloadAsync();
+    }
+
+    private async Task DeleteAsync(ReadRuleViolationDto row)
+    {
+        if (row is null || row.Id <= 0)
+            return;
+
+        var ok = await DialogService.ShowConfirmDialogAsync(
+            "Excluir Violação",
+            $"Confirma excluir a violação Id {row.Id}?",
+            confirmText: "Excluir",
+            cancelText: "Cancelar",
+            confirmColor: Color.Error);
+
+        if (!ok)
+            return;
+
+        await Vm.DeleteAsync(row.Id);
+
+        if (_grid is not null)
+            await _grid.ReloadAsync();
+    }
+}

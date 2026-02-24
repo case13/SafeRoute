@@ -1,0 +1,74 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using SafeRoute.Shared.Authorizations
+
+<MudPaper Width="260px"
+          Elevation="0"
+          Class="sidenav-root">
+
+    <MudNavMenu Class="mud-width-full">
+
+        <MudText Typo="Typo.h6" Class="px-4 pt-2">
+            SafeRoute
+        </MudText>
+
+        <MudText Typo="Typo.body2"
+                 Class="px-4 mud-text-secondary">
+            Navegação
+        </MudText>
+
+        <MudDivider Class="my-2" />
+
+        <MudNavLink Href="/"
+                    Match="NavLinkMatch.All"
+                    IconColor="Color.Info"
+                    Style="color:royalblue;"
+                    Icon="@Icons.Material.Filled.Dashboard">
+            Dashboard
+        </MudNavLink>
+
+        <AuthorizeView Policy="@PolicyNames.AdminOuUsuario">
+            <MudNavLink Href="/projects"
+                        IconColor="Color.Info"
+                        Style="color:royalblue;"
+                        Icon="@Icons.Material.Filled.AddHomeWork">
+                Projetos
+            </MudNavLink>
+        </AuthorizeView>
+
+        <MudNavGroup Title="Configurações"
+                     IconColor="Color.Info"
+                     Style="color:royalblue;"
+                     Icon="@Icons.Material.Filled.Settings"
+                     Expanded="true">
+
+            <AuthorizeView Policy="@PolicyNames.Administrador">
+                <MudNavLink Href="/users"
+                            IconColor="Color.Info"
+                            Style="color:royalblue;"
+                            Icon="@Icons.Material.Filled.People">
+                    Usuários
+                </MudNavLink>
+            </AuthorizeView>
+            <AuthorizeView Policy="@PolicyNames.Administrador">
+                <MudNavLink Href="/companies"
+                            IconColor="Color.Info"
+                            Style="color:royalblue;"
+                            Icon="@Icons.Material.Filled.People">
+                    Empresas
+                </MudNavLink>
+            </AuthorizeView>
+            <AuthorizeView Policy="@PolicyNames.AdminOuUsuario">
+                <MudNavLink Href="/auth/change-password"
+                            IconColor="Color.Info"
+                            Style="color:royalblue;"
+                            Icon="@Icons.Material.Filled.Password">
+                    Alterar Senha
+                </MudNavLink>
+            </AuthorizeView>
+
+        </MudNavGroup>
+
+    </MudNavMenu>
+
+</MudPaper>

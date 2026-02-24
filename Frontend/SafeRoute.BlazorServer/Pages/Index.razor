@@ -1,3 +1,31 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using SafeRoute.BlazorServer.Components
+@attribute [Authorize]
+@inject NavigationManager Nav
 
-<h1>Hello, world!</h1>
+<div style="
+    height: calc(100vh - 64px);
+    width: calc(100% + 48px);
+    margin-left: -24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+">
+    <img src="images/menu-saferoute.png"
+         alt="SafeRoute"
+         style="
+            height: min(520px, 65vh);
+            width: auto;
+            max-width: 95%;
+            display: block;
+            opacity: 0.92;
+         " />
+</div>
+@code {
+    private bool IsHome =>
+        Nav.Uri.EndsWith("/", StringComparison.OrdinalIgnoreCase) ||
+        Nav.Uri.EndsWith("/index", StringComparison.OrdinalIgnoreCase);
+}

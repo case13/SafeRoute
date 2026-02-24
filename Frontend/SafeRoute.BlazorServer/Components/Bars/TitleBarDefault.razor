@@ -1,0 +1,16 @@
+﻿@using MudBlazor
+
+<MudCard Style="@($"padding:{Padding}; margin:{Margin}; background-color:{SubtitleColor};")">
+    <MudText Style="@($"color:{SubtitleTextColor}; font-size:14px; font-weight:{SubtitleFontType};")">
+        @Subtitle
+    </MudText>
+</MudCard>
+
+@code {
+    [Parameter] public string Subtitle { get; set; } = "Informe o Subtítulo";
+    [Parameter] public string SubtitleColor { get; set; } = "#000080";
+    [Parameter] public string SubtitleTextColor { get; set; } = "white";
+    [Parameter] public string SubtitleFontType { get; set; } = "bold";
+    [Parameter] public string Padding { get; set; } = "10px";
+    [Parameter] public string Margin { get; set; } = "10px 0 10px 0";
+}

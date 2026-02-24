@@ -1,0 +1,114 @@
+﻿@typeparam TItem
+
+@using MudBlazor
+@using SafeRoute.BlazorServer.Components.Bars
+
+<MudPaper Class="pa-4">
+
+    <TitleBarDefault Subtitle="@Subtitle"
+                     SubtitleColor="@SubtitleColor"
+                     SubtitleTextColor="@SubtitleTextColor"
+                     SubtitleFontType="@SubtitleFontType"
+                     Padding="@Padding"
+                     Margin="@Margin" />
+
+    @if (ShowToolbar)
+    {
+        <ToolBarDefault ShowHome="@ShowHome"
+                        ShowBack="@ShowBack"
+                        HomeHref="@HomeHref"
+                        ButtonSize="@ButtonSize"
+                        ShowSearch="@ShowSearch"
+                        ShowSearchButton="@ShowSearchButton"
+                        OnSearch="OnSearchInternal"
+                        ShowAdd="@ShowAdd"
+                        ShowEdit="@ShowEdit"
+                        ShowDelete="@ShowDelete"
+                        AddClick="@AddClick"
+                        EditClick="@EditClick"
+                        DeleteClick="@DeleteClick"
+                        BackClick="@BackClick">
+            @ToolbarContent
+        </ToolBarDefault>
+    }
+
+    <MudTable T="TItem"
+              @ref="_table"
+              ServerData="ServerData"
+              Dense="true"
+              Hover="true"
+              Bordered="true"
+              Striped="true"
+              RowsPerPage="@RowsPerPage">
+
+        <HeaderContent>
+            @Header
+        </HeaderContent>
+
+        <RowTemplate Context="row">
+            @RowTemplate(row)
+        </RowTemplate>
+
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+
+    </MudTable>
+
+</MudPaper>
+
+@code {
+    private MudTable<TItem>? _table;
+    private string? _searchText;
+
+    [Parameter] public Func<TableState, CancellationToken, Task<TableData<TItem>>> ServerData { get; set; } = default!;
+    [Parameter] public RenderFragment Header { get; set; } = default!;
+    [Parameter] public RenderFragment<TItem> RowTemplate { get; set; } = default!;
+
+    [Parameter] public int RowsPerPage { get; set; } = 10;
+
+    [Parameter] public string Subtitle { get; set; } = "Consulta";
+    [Parameter] public string SubtitleColor { get; set; } = "#000080";
+    [Parameter] public string SubtitleTextColor { get; set; } = "white";
+    [Parameter] public string SubtitleFontType { get; set; } = "bold";
+    [Parameter] public string Padding { get; set; } = "10px";
+    [Parameter] public string Margin { get; set; } = "10px 0 10px 0";
+
+    [Parameter] public bool ShowToolbar { get; set; } = true;
+
+    [Parameter] public bool ShowHome { get; set; } = true;
+    [Parameter] public bool ShowBack { get; set; } = false;
+    [Parameter] public string HomeHref { get; set; } = "/";
+    [Parameter] public EventCallback BackClick { get; set; }
+
+    [Parameter] public bool ShowSearch { get; set; } = true;
+    [Parameter] public bool ShowSearchButton { get; set; } = true;
+    [Parameter] public EventCallback<string?> OnSearchChanged { get; set; }
+
+    [Parameter] public bool ShowAdd { get; set; } = false;
+    [Parameter] public bool ShowEdit { get; set; } = false;
+    [Parameter] public bool ShowDelete { get; set; } = false;
+
+    [Parameter] public EventCallback AddClick { get; set; }
+    [Parameter] public EventCallback EditClick { get; set; }
+    [Parameter] public EventCallback DeleteClick { get; set; }
+
+    [Parameter] public RenderFragment? ToolbarContent { get; set; }
+    [Parameter] public Size ButtonSize { get; set; } = Size.Small;
+
+    public async Task ReloadAsync()
+    {
+        if (_table is not null)
+            await _table.ReloadServerData();
+    }
+
+    private async Task OnSearchInternal(string? text)
+    {
+        _searchText = text;
+
+        if (OnSearchChanged.HasDelegate)
+            await OnSearchChanged.InvokeAsync(_searchText);
+
+        await ReloadAsync();
+    }
+}
